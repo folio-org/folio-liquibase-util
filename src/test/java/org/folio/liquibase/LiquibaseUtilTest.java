@@ -33,6 +33,8 @@ public class LiquibaseUtilTest {
   public static void setUpClass(final TestContext context) throws Exception {
     vertx = Vertx.vertx();
 
+    Async async = context.async();
+
     PostgresClient.setIsEmbedded(true);
 
     PostgresClient postgresClient = PostgresClient.getInstance(vertx);
@@ -40,43 +42,53 @@ public class LiquibaseUtilTest {
     postgresClient.startEmbeddedPostgres();
 
     postgresClient.select("SELECT 1", context.asyncAssertSuccess());
+
+    // create a user for tenant
+    String schemaName = PostgresClient.convertToPsqlStandard(TENANT_ID);
+    String elevateTenantUserQueryTemplate = "CREATE USER %s WITH LOGIN";
+    String elevateTenantUserQuery = String.format(elevateTenantUserQueryTemplate, schemaName);
+    postgresClient.execute(elevateTenantUserQuery,  res -> {
+      context.assertTrue(res.succeeded());
+      async.complete();
+    });
   }
 
   @Test
   public void testInitializeSchemaForModule(final TestContext context) {
-    Async async = context.async();
     PostgresClient postgresClient = PostgresClient.getInstance(vertx);
 
     String schemaQueryTemplate = "SELECT schema_name FROM information_schema.schemata WHERE schema_name = '%s';";
 
+    // initialize configuration schema for module
     vertx.executeBlocking(blockingFuture -> {
       LiquibaseUtil.initializeSchemaForModule(vertx, MODULE_CONFIGURATION_SCHEMA);
       blockingFuture.complete();
     }, result -> {
+      // check if module configuration schema was created
       String schemaQuery = String.format(schemaQueryTemplate, MODULE_CONFIGURATION_SCHEMA);
       postgresClient.select(schemaQuery,  res -> {
         context.assertTrue(res.succeeded());
         context.assertEquals(1, res.result().getNumRows());
-        async.complete();
       });
     });
   }
 
   @Test
   public void testInitializeSchemaForTenant(final TestContext context) {
-    Async async = context.async();
     PostgresClient postgresClient = PostgresClient.getInstance(vertx);
 
     String schemaName = PostgresClient.convertToPsqlStandard(TENANT_ID);
 
     String schemaTablesQueryTemplate = "SELECT table_name FROM information_schema.tables WHERE table_schema = '%s';";
-    String schemaColumnsQueryTemplate = "SELECT * FROM information_schema.columns WHERE table_schema = '%s' and table_name = '%s';";
+    String schemaColumnsQueryTemplate = "SELECT column_name FROM information_schema.columns WHERE table_schema = '%s' and table_name = '%s';";
 
+    // initialize schema for tenant
     vertx.executeBlocking(blockingFuture -> {
       LiquibaseUtil.initializeSchemaForTenant(vertx, TENANT_ID);
       blockingFuture.complete();
     }, result -> {
 
+      // check if all tenant schemata were created
       String schemaTablesQuery = String.format(schemaTablesQueryTemplate, schemaName);
       postgresClient.select(schemaTablesQuery, tableRes -> {
         context.assertTrue(tableRes.succeeded());
@@ -88,6 +100,7 @@ public class LiquibaseUtilTest {
 
         actualTables.forEach(tableName -> {
 
+          // check if all schema columns were as expected
           String schemaColumnsQuery = String.format(schemaColumnsQueryTemplate, schemaName, tableName);
           postgresClient.select(schemaColumnsQuery, columnRes -> {
             context.assertTrue(columnRes.succeeded());
@@ -96,7 +109,6 @@ public class LiquibaseUtilTest {
             Collections.sort(actualColumns);
             Collections.sort(expectedColumns);
             context.assertEquals(expectedColumns, actualColumns);
-            async.complete();
           });
 
         });
@@ -107,10 +119,21 @@ public class LiquibaseUtilTest {
   @AfterClass
   public static void tearDownClass(final TestContext context) {
     Async async = context.async();
-    vertx.close(context.asyncAssertSuccess(res -> {
-      PostgresClient.stopEmbeddedPostgres();
-      async.complete();
-    }));
+    PostgresClient postgresClient = PostgresClient.getInstance(vertx);
+
+    // drop user for tenant
+    String dropUserQueryTemplate = "DROP USER %s";
+    String schemaName = PostgresClient.convertToPsqlStandard(TENANT_ID);
+    String dropUserQuery = String.format(dropUserQueryTemplate, schemaName);
+    postgresClient.execute(dropUserQuery, res -> {
+      context.assertTrue(res.succeeded());
+
+      // close vertx
+      vertx.close(context.asyncAssertSuccess(closRes -> {
+        PostgresClient.stopEmbeddedPostgres();
+        async.complete();
+      }));
+    });
   }
 
   private List<String> getExpectedTables() {
