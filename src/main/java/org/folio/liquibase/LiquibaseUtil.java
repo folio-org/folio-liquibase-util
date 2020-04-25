@@ -73,17 +73,20 @@ public class LiquibaseUtil {
    * @param changelogPath path to changelog file in the module classpath
    * @throws LiquibaseException if database access error occurs
    */
-  private static void runScripts(String schemaName, Connection connection, String changelogPath)
-      throws LiquibaseException {
-      Database database = DatabaseFactory.getInstance()
-        .findCorrectDatabaseImplementation(new JdbcConnection(connection));
+  private static void runScripts(String schemaName, Connection connection, String changelogPath) throws LiquibaseException {
+    Liquibase liquibase = null;
+    try {
+      Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
       database.setDefaultSchemaName(schemaName);
-      try (Liquibase liquibase = new Liquibase(changelogPath, new ClassLoaderResourceAccessor(), database)) {
-        liquibase.update(new Contexts());
-      } catch (Exception e) {
-        throw new LiquibaseException(e);
+      liquibase = new Liquibase(changelogPath, new ClassLoaderResourceAccessor(), database);
+      liquibase.update(new Contexts());
+    } finally {
+      if (liquibase != null && liquibase.getDatabase() != null) {
+        Database database = liquibase.getDatabase();
+        database.close();
       }
     }
+  }
 
   /**
    * Creates module configuration schema
