@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.folio.rest.persist.PostgresClient;
 import org.junit.AfterClass;
@@ -68,7 +67,7 @@ public class LiquibaseUtilTest {
       String schemaQuery = String.format(schemaQueryTemplate, MODULE_CONFIGURATION_SCHEMA);
       postgresClient.select(schemaQuery,  res -> {
         context.assertTrue(res.succeeded());
-        context.assertEquals(1, res.result().getNumRows());
+        context.assertEquals(1, res.result().rowCount());
       });
     });
   }
@@ -92,7 +91,8 @@ public class LiquibaseUtilTest {
       String schemaTablesQuery = String.format(schemaTablesQueryTemplate, schemaName);
       postgresClient.select(schemaTablesQuery, tableRes -> {
         context.assertTrue(tableRes.succeeded());
-        List<String> actualTables = tableRes.result().getRows().stream().map(row -> row.getString("table_name")).collect(Collectors.toList());
+        List<String> actualTables = new ArrayList<>();
+        tableRes.result().forEach(row -> actualTables.add(row.getString("table_name")));
         List<String> expectedTables = getExpectedTables();
         Collections.sort(actualTables);
         Collections.sort(expectedTables);
@@ -104,13 +104,13 @@ public class LiquibaseUtilTest {
           String schemaColumnsQuery = String.format(schemaColumnsQueryTemplate, schemaName, tableName);
           postgresClient.select(schemaColumnsQuery, columnRes -> {
             context.assertTrue(columnRes.succeeded());
-            List<String> actualColumns = columnRes.result().getRows().stream().map(row -> row.getString("column_name")).collect(Collectors.toList());
+            List<String> actualColumns = new ArrayList<>();
+            columnRes.result().forEach(row -> actualColumns.add(row.getString("column_name")));
             List<String> expectedColumns = getExpectedColumns(tableName);
             Collections.sort(actualColumns);
             Collections.sort(expectedColumns);
             context.assertEquals(expectedColumns, actualColumns);
           });
-
         });
       });
     });
@@ -137,29 +137,24 @@ public class LiquibaseUtilTest {
   }
 
   private List<String> getExpectedTables() {
-    return Arrays.asList(new String[] { 
-      "databasechangeloglock",
+    return Arrays.asList("databasechangeloglock",
       "databasechangelog",
       "audit_message",
       "audit_message_payload",
-      "user"
-     });
+      "user");
   }
 
   private List<String> getExpectedColumns(String tableName) {
     List<String> expectedColumns;
     switch(tableName) {
       case "databasechangeloglock":
-        expectedColumns = Arrays.asList(new String[] {
-          "id",
+        expectedColumns = Arrays.asList("id",
           "locked",
           "lockgranted",
-          "lockedby"
-        });
+          "lockedby");
       break;
       case "databasechangelog":
-        expectedColumns = Arrays.asList(new String[] {
-          "id",
+        expectedColumns = Arrays.asList("id",
           "author",
           "filename",
           "dateexecuted",
@@ -172,12 +167,10 @@ public class LiquibaseUtilTest {
           "liquibase",
           "contexts",
           "labels",
-          "deployment_id"
-        });
+          "deployment_id");
       break;
       case "audit_message":
-        expectedColumns = Arrays.asList(new String[] {
-          "id",
+        expectedColumns = Arrays.asList("id",
           "event_id",
           "event_type",
           "correlation_id",
@@ -186,23 +179,18 @@ public class LiquibaseUtilTest {
           "audit_date",
           "state",
           "published_by",
-          "error_message"
-        });
+          "error_message");
       break;
       case "audit_message_payload":
-        expectedColumns = Arrays.asList(new String[] {
-          "event_id",
-          "content"
-        });
+        expectedColumns = Arrays.asList("event_id",
+          "content");
       break;
       case "user":
-        expectedColumns = Arrays.asList(new String[] {
-          "username",
+        expectedColumns = Arrays.asList("username",
           "password",
-          "token"
-        });
+          "token");
       break;
-      default: 
+      default:
         expectedColumns = new ArrayList<>();
       break;
     }
