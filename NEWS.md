@@ -1,4 +1,4 @@
-## 0.0.1 2020-04-24
+## 1.0.0 2020-06-05
  * [LIQUTIL-3](https://issues.folio.org/browse/LIQUTIL-3) Initial setup
  * Add LiquibaseUtil and SingleConnectionProvider
  * Add integration tests for LiquibaseUtil using embedded PostgreSQL
