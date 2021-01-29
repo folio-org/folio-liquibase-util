@@ -23,7 +23,7 @@
     <vertx.version>4.0.0.CR2</vertx.version>
     <liquibase.version>3.8.9</liquibase.version>
     <raml-module-builder.version>32.0.0</raml-module-builder.version>
-    <junit.version>4.12</junit.version>
+    <junit.version>4.13.1</junit.version>
   </properties>
 
   <dependencies>
