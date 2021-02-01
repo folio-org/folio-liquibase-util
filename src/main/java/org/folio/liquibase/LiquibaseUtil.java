@@ -1,8 +1,8 @@
 package org.folio.liquibase;
 
 import io.vertx.core.Vertx;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import liquibase.Contexts;
 import liquibase.Liquibase;
 import liquibase.database.Database;
@@ -23,7 +23,7 @@ import static org.folio.liquibase.SingleConnectionProvider.getConnection;
  * Util class to manage liquibase scripting
  */
 public class LiquibaseUtil {
-  private static final Logger LOGGER = LoggerFactory.getLogger(LiquibaseUtil.class);
+  private static final Logger LOGGER = LogManager.getLogger();
   private static final String CHANGELOG_MODULE_PATH = "liquibase/module/changelog.xml";
   private static final String CHANGELOG_TENANT_PATH = "liquibase/tenant/changelog.xml";
 

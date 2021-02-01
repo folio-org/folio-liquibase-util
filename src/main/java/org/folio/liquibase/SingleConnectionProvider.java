@@ -10,15 +10,15 @@ import org.folio.rest.persist.PostgresClient;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Util class to obtain single connection to underlying database using DriverManager.
  * Connection pool is not provided.
  */
 public class SingleConnectionProvider {
-  private static final Logger LOGGER = LoggerFactory.getLogger(SingleConnectionProvider.class);
+  private static final Logger LOGGER = LogManager.getLogger();
   private static final String JDBC_DRIVER = "jdbc:postgresql";
   private static final String CONFIG_USERNAME_KEY = "username";
   private static final String CONFIG_PASS_KEY = "password";
