@@ -3,7 +3,7 @@
 
   <groupId>org.folio</groupId>
   <artifactId>folio-liquibase-util</artifactId>
-  <version>1.2.0-SNAPSHOT</version>
+  <version>1.3.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>folio-liquibase-util</name>
   <organization>
@@ -115,7 +115,7 @@
               <goal>shade</goal>
             </goals>
             <configuration>
-              <artifactSet/>
+              <artifactSet />
               <outputFile>
                 ${project.build.directory}/${project.artifactId}-fat.jar
               </outputFile>
