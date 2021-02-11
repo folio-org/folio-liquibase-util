@@ -1,4 +1,4 @@
-## 1.2.0-SNAPSHOT 2021-01-29
+## 1.2.0 2021-02-11
 * [LIQUTIL-9](https://issues.folio.org/browse/LIQUTIL-9) Upgrade to RAML Module Builder 32.x
 * [LIQUTIL-8](https://issues.folio.org/browse/LIQUTIL-8) Add personal data disclosure form
 
