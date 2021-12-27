@@ -20,9 +20,9 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <vertx.version>4.0.0</vertx.version>
+    <vertx.version>4.2.2</vertx.version>
     <liquibase.version>3.8.9</liquibase.version>
-    <raml-module-builder.version>32.1.0</raml-module-builder.version>
+    <raml-module-builder.version>33.2.3</raml-module-builder.version>
     <junit.version>4.13.1</junit.version>
   </properties>
 
@@ -52,6 +52,12 @@
       <groupId>io.vertx</groupId>
       <artifactId>vertx-unit</artifactId>
       <version>${vertx.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.folio</groupId>
+      <artifactId>postgres-testing</artifactId>
+      <version>${raml-module-builder.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
