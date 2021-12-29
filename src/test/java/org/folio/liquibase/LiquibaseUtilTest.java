@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.folio.postgres.testing.PostgresTesterContainer;
 import org.folio.rest.persist.PostgresClient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -34,11 +35,9 @@ public class LiquibaseUtilTest {
 
     Async async = context.async();
 
-    PostgresClient.setIsEmbedded(true);
+    PostgresClient.setPostgresTester(new PostgresTesterContainer());
 
     PostgresClient postgresClient = PostgresClient.getInstance(vertx);
-
-    postgresClient.startEmbeddedPostgres();
 
     postgresClient.select("SELECT 1", context.asyncAssertSuccess());
 
@@ -130,7 +129,7 @@ public class LiquibaseUtilTest {
 
       // close vertx
       vertx.close(context.asyncAssertSuccess(closRes -> {
-        PostgresClient.stopEmbeddedPostgres();
+        PostgresClient.stopPostgresTester();
         async.complete();
       }));
     });
