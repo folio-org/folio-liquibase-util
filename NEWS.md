@@ -1,5 +1,6 @@
-## 1.3.0 xxxx-xx-xx
+## 1.3.0 2022-02-01
 * [LIQUTIL-11](https://issues.folio.org/browse/LIQUTIL-11) Upgrade to RAML Module Builder 33.2.3
+* Update liquibase to v4.7.1
 
 ## 1.2.0 2021-02-11
 * [LIQUTIL-9](https://issues.folio.org/browse/LIQUTIL-9) Upgrade to RAML Module Builder 32.x
