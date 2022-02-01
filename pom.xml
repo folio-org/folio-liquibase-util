@@ -21,7 +21,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <vertx.version>4.2.2</vertx.version>
-    <liquibase.version>3.8.9</liquibase.version>
+    <liquibase.version>4.7.1</liquibase.version>
     <raml-module-builder.version>33.2.3</raml-module-builder.version>
     <junit.version>4.13.1</junit.version>
   </properties>
