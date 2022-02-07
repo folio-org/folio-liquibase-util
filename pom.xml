@@ -101,6 +101,7 @@
         <version>2.22.1</version>
         <configuration>
           <useSystemClassLoader>false</useSystemClassLoader>
+          <testFailureIgnore>true</testFailureIgnore>
         </configuration>
       </plugin>
 
