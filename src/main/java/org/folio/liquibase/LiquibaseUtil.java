@@ -42,8 +42,9 @@ public class LiquibaseUtil {
       createModuleConfigurationSchema(connection, moduleConfigSchema);
       runScripts(moduleConfigSchema, connection, CHANGELOG_MODULE_PATH);
       LOGGER.info("Schema is initialized for the module");
-    } catch (Exception e) {
-      LOGGER.error("Error while initializing schema for the module", e);
+    } catch (SQLException | LiquibaseException e) {
+      // convert checked exceptions into unchecked exceptions
+      throw new RuntimeException(e);
     }
   }
 
@@ -60,8 +61,9 @@ public class LiquibaseUtil {
     try (Connection connection = getConnection(vertx, tenant)) {
       runScripts(schemaName, connection, CHANGELOG_TENANT_PATH);
       LOGGER.info("Schema is initialized for tenant " + tenant);
-    } catch (Exception e) {
-      LOGGER.error(format("Error while initializing schema %s for tenant %s", schemaName, tenant), e);
+    } catch (SQLException | LiquibaseException e) {
+      // convert checked exceptions into unchecked exceptions
+      throw new RuntimeException(e);
     }
   }
 
@@ -74,18 +76,12 @@ public class LiquibaseUtil {
    * @throws LiquibaseException if database access error occurs
    */
   private static void runScripts(String schemaName, Connection connection, String changelogPath) throws LiquibaseException {
-    Liquibase liquibase = null;
-    try {
-      Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
-      database.setDefaultSchemaName(schemaName);
-      liquibase = new Liquibase(changelogPath, new ClassLoaderResourceAccessor(), database);
+    Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
+    database.setDefaultSchemaName(schemaName);
+    try (Liquibase liquibase = new Liquibase(changelogPath, new ClassLoaderResourceAccessor(), database)) {
       liquibase.update(new Contexts());
-    } finally {
-      if (liquibase != null && liquibase.getDatabase() != null) {
-        Database database = liquibase.getDatabase();
-        database.close();
-      }
     }
+    // liquibase.close automatically closes database
   }
 
   /**
