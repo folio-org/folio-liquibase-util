@@ -24,6 +24,7 @@
     <liquibase.version>4.7.1</liquibase.version>
     <raml-module-builder.version>33.2.3</raml-module-builder.version>
     <junit.version>4.13.1</junit.version>
+    <postgresql.version>42.3.2</postgresql.version>
   </properties>
 
   <dependencies>
@@ -42,6 +43,7 @@
       <artifactId>domain-models-runtime</artifactId>
       <version>${raml-module-builder.version}</version>
     </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -58,6 +60,18 @@
       <groupId>org.folio</groupId>
       <artifactId>postgres-testing</artifactId>
       <version>${raml-module-builder.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest</artifactId>
+      <version>2.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${postgresql.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
