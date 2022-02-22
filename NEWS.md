@@ -1,3 +1,6 @@
+## 1.4.0 2022-02-22
+* [LIQUTIL-17](https://issues.folio.org/browse/LIQUTIL-17) Pass exceptions, don't catch and swallow them
+
 ## 1.3.0 2022-02-01
 * [LIQUTIL-11](https://issues.folio.org/browse/LIQUTIL-11) Upgrade to RAML Module Builder 33.2.3
 * Update liquibase to v4.7.1

@@ -43,6 +43,7 @@ public class LiquibaseUtil {
       runScripts(moduleConfigSchema, connection, CHANGELOG_MODULE_PATH);
       LOGGER.info("Schema is initialized for the module");
     } catch (SQLException | LiquibaseException e) {
+      LOGGER.error("Error while initializing schema for the module", e);
       // convert checked exceptions into unchecked exceptions
       throw new RuntimeException(e);
     }
@@ -62,6 +63,7 @@ public class LiquibaseUtil {
       runScripts(schemaName, connection, CHANGELOG_TENANT_PATH);
       LOGGER.info("Schema is initialized for tenant " + tenant);
     } catch (SQLException | LiquibaseException e) {
+      LOGGER.error(format("Error while initializing schema %s for tenant %s", schemaName, tenant), e);
       // convert checked exceptions into unchecked exceptions
       throw new RuntimeException(e);
     }
