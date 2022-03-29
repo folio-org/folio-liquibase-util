@@ -1,3 +1,6 @@
+## 1.4.1 2022-03-29
+* [LIQUTIL-19](https://issues.folio.org/browse/LIQUTIL-19) Update dependencies fixing CVE-2020-36518, CVE-2022-0839
+
 ## 1.4.0 2022-02-22
 * [LIQUTIL-17](https://issues.folio.org/browse/LIQUTIL-17) Pass exceptions, don't catch and swallow them
 
