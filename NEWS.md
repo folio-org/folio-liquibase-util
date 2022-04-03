@@ -1,3 +1,6 @@
+## 1.4.2 2022-04-03
+* [LIQUTIL-21](https://issues.folio.org/browse/LIQUTIL-21) No suitable driver found for jdbc:postgresql
+
 ## 1.4.1 2022-03-29
 * [LIQUTIL-19](https://issues.folio.org/browse/LIQUTIL-19) Update dependencies fixing CVE-2020-36518, CVE-2022-0839
 
