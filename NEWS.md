@@ -1,3 +1,6 @@
+## 1.5.0 2022-06-14
+* [LIQUTIL-23](https://issues.folio.org/browse/LIQUTIL-23) Upgrade to RAML Module Builder 34.0.0
+
 ## 1.4.0 2022-02-22
 * [LIQUTIL-17](https://issues.folio.org/browse/LIQUTIL-17) Pass exceptions, don't catch and swallow them
 
