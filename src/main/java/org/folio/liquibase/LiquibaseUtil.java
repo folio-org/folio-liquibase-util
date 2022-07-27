@@ -80,6 +80,7 @@ public class LiquibaseUtil {
   private static void runScripts(String schemaName, Connection connection, String changelogPath) throws LiquibaseException {
     Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
     database.setDefaultSchemaName(schemaName);
+    database.setLiquibaseSchemaName(schemaName);
     try (Liquibase liquibase = new Liquibase(changelogPath, new ClassLoaderResourceAccessor(), database)) {
       liquibase.update(new Contexts());
     }
