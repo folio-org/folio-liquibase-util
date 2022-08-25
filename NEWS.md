@@ -1,3 +1,6 @@
+## 1.5.1 2022-08-25
+* [LIQUTIL-26](https://issues.folio.org/browse/LIQUTIL-26) Vert.x 4.3.3, PostgreSQL 42.5.0 fixing vulns; bump RMB, Liquibase, JUnit
+
 ## 1.5.0 2022-06-14
 * [LIQUTIL-23](https://issues.folio.org/browse/LIQUTIL-23) Upgrade to RAML Module Builder 34.0.0
 

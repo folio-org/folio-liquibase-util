@@ -20,11 +20,11 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <vertx.version>4.3.1</vertx.version>
-    <liquibase.version>4.9.0</liquibase.version>
-    <raml-module-builder.version>34.0.0</raml-module-builder.version>
-    <junit.version>4.13.1</junit.version>
-    <postgresql.version>42.3.3</postgresql.version>
+    <vertx.version>4.3.3</vertx.version>
+    <liquibase.version>4.15.0</liquibase.version>
+    <raml-module-builder.version>34.0.2</raml-module-builder.version>
+    <junit.version>4.13.2</junit.version>
+    <postgresql.version>42.5.0</postgresql.version>
   </properties>
 
   <dependencies>
