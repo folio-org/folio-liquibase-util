@@ -39,6 +39,15 @@
       <version>${liquibase.version}</version>
     </dependency>
     <dependency>
+      <!-- Remove this snakeyaml dependency after upgrading to liquibase-core >= 4.16.2
+           and the fix for Denial of Service attacks (DOS) caused by Stack-based Buffer Overflow:
+           https://nvd.nist.gov/vuln/detail/CVE-2022-38752
+      -->
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+      <version>1.33</version>
+    </dependency>
+    <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <version>${postgresql.version}</version>
