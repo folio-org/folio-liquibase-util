@@ -1,3 +1,8 @@
+## 1.5.2 2022-09-30
+* [LIQUTIL-30](https://issues.folio.org/browse/LIQUTIL-30) snakeyaml 1.33 fixing DoS CVE-2022-38752
+* [LIQUTIL-28](https://issues.folio.org/browse/LIQUTIL-28) Liquibase 4.16.1 fixing snakeyaml vulnerabilities 
+* [LIQUTIL-25](https://issues.folio.org/browse/LIQUTIL-25) Set liquibase schema name explicitly
+
 ## 1.5.1 2022-08-25
 * [LIQUTIL-26](https://issues.folio.org/browse/LIQUTIL-26) Vert.x 4.3.3, PostgreSQL 42.5.0 fixing vulns; bump RMB, Liquibase, JUnit
 
