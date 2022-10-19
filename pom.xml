@@ -50,9 +50,7 @@
     <dependency>
       <!-- Remove this commons-text dependency after upgrading to liquibase-core version
            that has a commons-text dependency with version >= 1.10.0.
-           commons-text < 1.10.0 has Arbitrary Code Execution vulnerability:
-           https://nvd.nist.gov/vuln/detail/CVE-2022-42889
-      -->
+           commons-text < 1.10.0 has Arbitrary Code Execution vulnerability: https://nvd.nist.gov/vuln/detail/CVE-2022-42889 -->
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-text</artifactId>
       <version>1.10.0</version>
