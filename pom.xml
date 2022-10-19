@@ -3,7 +3,7 @@
 
   <groupId>org.folio</groupId>
   <artifactId>folio-liquibase-util</artifactId>
-  <version>1.5.3</version>
+  <version>1.6.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>folio-liquibase-util</name>
   <organization>
@@ -50,8 +50,7 @@
     <dependency>
       <!-- Remove this commons-text dependency after upgrading to liquibase-core version
            that has a commons-text dependency with version >= 1.10.0.
-           commons-text < 1.10.0 has Arbitrary Code Execution vulnerability: https://nvd.nist.gov/vuln/detail/CVE-2022-42889
-      -->
+           commons-text < 1.10.0 has Arbitrary Code Execution vulnerability: https://nvd.nist.gov/vuln/detail/CVE-2022-42889 -->
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-text</artifactId>
       <version>1.10.0</version>
@@ -97,7 +96,7 @@
     <url>https://github.com/folio-org/folio-liquibase-util</url>
     <connection>scm:git:git@github.com:folio-org/folio-liquibase-util.git</connection>
     <developerConnection>scm:git:git@github.com:folio-org/folio-liquibase-util.git</developerConnection>
-    <tag>v1.5.3</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <build>
