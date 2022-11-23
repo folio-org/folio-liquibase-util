@@ -24,7 +24,7 @@
     <liquibase.version>4.16.1</liquibase.version>
     <raml-module-builder.version>35.0.1</raml-module-builder.version>
     <junit.version>4.13.2</junit.version>
-    <postgresql.version>42.5.0</postgresql.version>
+    <postgresql.version>42.5.1</postgresql.version>
   </properties>
 
   <dependencies>
