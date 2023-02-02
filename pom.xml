@@ -20,9 +20,9 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <vertx.version>4.3.4</vertx.version>
-    <liquibase.version>4.16.1</liquibase.version>
-    <raml-module-builder.version>35.0.1</raml-module-builder.version>
+    <vertx.version>4.3.7</vertx.version>
+    <liquibase.version>4.19.0</liquibase.version>
+    <raml-module-builder.version>35.0.4</raml-module-builder.version>
     <junit.version>4.13.2</junit.version>
     <postgresql.version>42.5.1</postgresql.version>
   </properties>
@@ -37,23 +37,6 @@
       <groupId>org.liquibase</groupId>
       <artifactId>liquibase-core</artifactId>
       <version>${liquibase.version}</version>
-    </dependency>
-    <dependency>
-      <!-- Remove this snakeyaml dependency after upgrading to liquibase-core >= 4.16.2
-           and the fix for Denial of Service attacks (DOS) caused by Stack-based Buffer Overflow:
-           https://nvd.nist.gov/vuln/detail/CVE-2022-38752
-      -->
-      <groupId>org.yaml</groupId>
-      <artifactId>snakeyaml</artifactId>
-      <version>1.33</version>
-    </dependency>
-    <dependency>
-      <!-- Remove this commons-text dependency after upgrading to liquibase-core version
-           that has a commons-text dependency with version >= 1.10.0.
-           commons-text < 1.10.0 has Arbitrary Code Execution vulnerability: https://nvd.nist.gov/vuln/detail/CVE-2022-42889 -->
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-text</artifactId>
-      <version>1.10.0</version>
     </dependency>
     <dependency>
       <groupId>org.postgresql</groupId>
