@@ -1,3 +1,7 @@
+## 1.6.0 2023-02-06
+* [MODDATAIMP-750](https://issues.folio.org/browse/MODDATAIMP-750) Update util's dependencies
+* [MODDATAIMP-736](https://issues.folio.org/browse/MODDATAIMP-736) Adjust logging configuration to display datetime in a proper format
+
 ## 1.5.3 2022-10-19
 * [LIQUTIL-32](https://issues.folio.org/browse/LIQUTIL-32) commons-text 1.10.0 fixing Arbitrary Code Execution
 * [LIQUTIL-33](https://issues.folio.org/browse/LIQUTIL-33) Upgrade RMB 35.0.1, Vert.x 4.3.4
