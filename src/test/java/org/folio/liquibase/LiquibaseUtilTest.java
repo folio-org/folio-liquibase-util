@@ -121,64 +121,20 @@ public class LiquibaseUtilTest {
   }
 
   private List<String> getExpectedTables() {
-    return Arrays.asList("databasechangeloglock",
-      "databasechangelog",
-      "audit_message",
-      "audit_message_payload",
-      "user");
+    return Arrays.asList("databasechangeloglock", "databasechangelog", "audit_message", "audit_message_payload", "user");
   }
 
   private List<String> getExpectedColumns(String tableName) {
-    List<String> expectedColumns;
-    switch(tableName) {
-      case "databasechangeloglock":
-        expectedColumns = Arrays.asList("id",
-          "locked",
-          "lockgranted",
-          "lockedby");
-      break;
-      case "databasechangelog":
-        expectedColumns = Arrays.asList("id",
-          "author",
-          "filename",
-          "dateexecuted",
-          "orderexecuted",
-          "exectype",
-          "md5sum",
-          "description",
-          "comments",
-          "tag",
-          "liquibase",
-          "contexts",
-          "labels",
-          "deployment_id");
-      break;
-      case "audit_message":
-        expectedColumns = Arrays.asList("id",
-          "event_id",
-          "event_type",
-          "correlation_id",
-          "tenant_id",
-          "created_by",
-          "audit_date",
-          "state",
-          "published_by",
-          "error_message");
-      break;
-      case "audit_message_payload":
-        expectedColumns = Arrays.asList("event_id",
-          "content");
-      break;
-      case "user":
-        expectedColumns = Arrays.asList("username",
-          "password",
-          "token");
-      break;
-      default:
-        expectedColumns = new ArrayList<>();
-      break;
-    }
-    return expectedColumns;
+    return switch (tableName) {
+      case "databasechangeloglock" -> Arrays.asList("id", "locked", "lockgranted", "lockedby");
+      case "databasechangelog" -> Arrays.asList("id", "author", "filename", "dateexecuted", "orderexecuted",
+        "exectype", "md5sum", "description", "comments", "tag", "liquibase", "contexts", "labels", "deployment_id");
+      case "audit_message" -> Arrays.asList("id", "event_id", "event_type", "correlation_id", "tenant_id",
+        "created_by", "audit_date", "state", "published_by", "error_message");
+      case "audit_message_payload" -> Arrays.asList("event_id", "content");
+      case "user" -> Arrays.asList("username", "password", "token");
+      default -> new ArrayList<>();
+    };
   }
 
 }

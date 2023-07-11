@@ -1,3 +1,6 @@
+## 1.7.0-SNAPSHOT 2023-XX-XX
+* [LIQUTIL-37](https://issues.folio.org/browse/LIQUTIL-37) Upgrade folio-liquibase-util to Java 17
+
 ## 1.6.0 2023-02-06
 * [MODDATAIMP-750](https://issues.folio.org/browse/MODDATAIMP-750) Update util's dependencies
 * [MODDATAIMP-736](https://issues.folio.org/browse/MODDATAIMP-736) Adjust logging configuration to display datetime in a proper format
