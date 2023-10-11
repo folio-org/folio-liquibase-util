@@ -1,4 +1,4 @@
-## 1.7.0-SNAPSHOT 2023-XX-XX
+## 1.7.0 2023-10-11
 * [LIQUTIL-37](https://issues.folio.org/browse/LIQUTIL-37) Upgrade folio-liquibase-util to Java 17
 
 ## 1.6.0 2023-02-06
