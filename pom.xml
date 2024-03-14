@@ -20,11 +20,11 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <vertx.version>4.4.5</vertx.version>
+    <vertx.version>4.5.4</vertx.version>
     <liquibase.version>4.24.0</liquibase.version>
-    <raml-module-builder.version>35.1.0</raml-module-builder.version>
+    <raml-module-builder.version>35.2.0</raml-module-builder.version>
     <junit.version>4.13.2</junit.version>
-    <postgresql.version>42.6.0</postgresql.version>
+    <postgresql.version>42.7.2</postgresql.version>
   </properties>
 
   <dependencies>
@@ -117,7 +117,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.1.2</version>
+        <version>3.2.5</version>
         <configuration>
           <useSystemClassLoader>false</useSystemClassLoader>
         </configuration>
@@ -126,7 +126,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.5.1</version>
+        <version>3.5.2</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -168,7 +168,7 @@
 
       <plugin>  <!-- *-javadoc.jar for https://repository.folio.org -->
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.6.0</version>
+        <version>3.6.3</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
