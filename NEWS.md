@@ -1,4 +1,4 @@
-## 1.8.0 2024-03-14
+## 1.8.0 2024-03-19
 * [LIQUTIL-41](https://issues.folio.org/browse/LIQUTIL-41) Upgrade RMB to v35.2.0
 
 ## 1.7.0 2023-10-11
