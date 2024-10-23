@@ -20,9 +20,9 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <vertx.version>4.5.4</vertx.version>
+    <vertx.version>4.5.7</vertx.version>
     <liquibase.version>4.24.0</liquibase.version>
-    <raml-module-builder.version>35.2.0</raml-module-builder.version>
+    <raml-module-builder.version>35.3.0</raml-module-builder.version>
     <junit.version>4.13.2</junit.version>
     <postgresql.version>42.7.2</postgresql.version>
   </properties>
@@ -47,6 +47,11 @@
       <groupId>org.folio</groupId>
       <artifactId>domain-models-runtime</artifactId>
       <version>${raml-module-builder.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.17.0</version>
     </dependency>
 
     <dependency>
