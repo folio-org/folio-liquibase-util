@@ -1,6 +1,8 @@
+## 1.9.0 2024-10-28
+* [LIQUTIL-43](https://folio-org.atlassian.net/browse/LIQUTIL-43) folio-liquibase-util Ramsons 2024 R2 - RMB v35.3.x update
+
 ## 1.8.0 2024-03-19
 * [LIQUTIL-41](https://issues.folio.org/browse/LIQUTIL-41) Upgrade RMB to v35.2.0
-* [LIQUTIL-43](https://folio-org.atlassian.net/browse/LIQUTIL-43) folio-liquibase-util Ramsons 2024 R2 - RMB v35.3.x update
 
 ## 1.7.0 2023-10-11
 * [LIQUTIL-37](https://issues.folio.org/browse/LIQUTIL-37) Upgrade folio-liquibase-util to Java 17
