@@ -1,3 +1,6 @@
+## 1.10.0 2025-XX-XX
+* [LIQUTIL-45](https://folio-org.atlassian.net/browse/LIQUTIL-45) Update to liquibase-util Java 21
+
 ## 1.9.0 2024-10-28
 * [LIQUTIL-43](https://folio-org.atlassian.net/browse/LIQUTIL-43) folio-liquibase-util Ramsons 2024 R2 - RMB v35.3.x update
 
