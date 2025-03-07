@@ -1,4 +1,4 @@
-## 1.10.0 2025-XX-XX
+## 1.10.0 2025-03-07
 * [LIQUTIL-45](https://folio-org.atlassian.net/browse/LIQUTIL-45) Update to liquibase-util Java 21
 
 ## 1.9.0 2024-10-28
