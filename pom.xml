@@ -3,7 +3,7 @@
 
   <groupId>org.folio</groupId>
   <artifactId>folio-liquibase-util</artifactId>
-  <version>1.11.0-SNAPSHOT</version>
+  <version>1.12.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>folio-liquibase-util</name>
   <organization>
@@ -22,7 +22,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <vertx.version>5.0.5</vertx.version>
     <liquibase.version>5.0.1</liquibase.version>
-    <raml-module-builder.version>36.0.0-SNAPSHOT</raml-module-builder.version>
+    <raml-module-builder.version>36.0.0</raml-module-builder.version>
     <junit.version>4.13.2</junit.version>
     <postgresql.version>42.7.8</postgresql.version>
   </properties>
