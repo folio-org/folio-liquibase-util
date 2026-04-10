@@ -1,3 +1,6 @@
+## 1.11.0 2026-04-10
+* [LIQUTIL-49](https://folio-org.atlassian.net/browse/LIQUTIL-49) UUpgrade to Vert.x 5.0
+
 ## 1.10.0 2025-03-07
 * [LIQUTIL-45](https://folio-org.atlassian.net/browse/LIQUTIL-45) Update to liquibase-util Java 21
 
