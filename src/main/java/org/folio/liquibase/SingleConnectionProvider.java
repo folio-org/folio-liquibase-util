@@ -2,22 +2,21 @@ package org.folio.liquibase;
 
 import static java.lang.String.format;
 
+import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonObject;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
-import org.folio.rest.persist.PostgresClient;
-
-import io.vertx.core.Vertx;
-import io.vertx.core.json.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.folio.rest.persist.PostgresClient;
 
 /**
  * Util class to obtain single connection to underlying database using DriverManager.
  * Connection pool is not provided.
  */
-public class SingleConnectionProvider {
+public final class SingleConnectionProvider {
+
   private static final Logger LOGGER = LogManager.getLogger();
   private static final String JDBC_DRIVER = "jdbc:postgresql";
   private static final String CONFIG_USERNAME_KEY = "username";
@@ -26,10 +25,10 @@ public class SingleConnectionProvider {
   private static final String CONFIG_PORT_KEY = "port";
   private static final String CONFIG_DATABASE_KEY = "database";
 
-  private SingleConnectionProvider() {}
+  private SingleConnectionProvider() { }
 
   /**
-   * Returns database connection for the given tenant
+   * Returns database connection for the given tenant.
    *
    * @param vertx  vertx instance
    * @param tenant given tenant to which schema connection should be provided
@@ -43,7 +42,7 @@ public class SingleConnectionProvider {
   }
 
   /**
-   * Returns database connection for the current user
+   * Returns database connection for the current user.
    *
    * @param vertx vertx instance
    * @return Connection to database

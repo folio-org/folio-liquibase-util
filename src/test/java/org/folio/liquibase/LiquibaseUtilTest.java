@@ -3,36 +3,40 @@ package org.folio.liquibase;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import io.vertx.core.Vertx;
+import io.vertx.junit5.Checkpoint;
+import io.vertx.junit5.VertxExtension;
+import io.vertx.junit5.VertxTestContext;
+import io.vertx.sqlclient.Tuple;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.folio.postgres.testing.PostgresTesterContainer;
 import org.folio.rest.persist.PostgresClient;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import io.vertx.core.Vertx;
-import io.vertx.ext.unit.TestContext;
-import io.vertx.ext.unit.junit.VertxUnitRunner;
-import io.vertx.sqlclient.Tuple;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Integration tests for LiquibaseUtil using embedded Postgres.
  */
-@RunWith(VertxUnitRunner.class)
-public class LiquibaseUtilTest {
+@ExtendWith(VertxExtension.class)
+class LiquibaseUtilTest {
 
   private static final String MODULE_CONFIGURATION_SCHEMA = "test_config";
 
   private static final String TENANT_ID = "diku";
-
+  private static final String TABLES_QUERY =
+    "SELECT table_name FROM information_schema.tables WHERE table_schema = $1";
+  private static final String COLUMNS_QUERY =
+    "SELECT column_name FROM information_schema.columns WHERE table_schema = $1 and table_name = $2";
   private static Vertx vertx;
 
-  @BeforeClass
-  public static void setUpClass(final TestContext context) throws Exception {
+  @BeforeAll
+  static void setUpClass(final VertxTestContext context) throws Exception {
     vertx = Vertx.vertx();
 
     Class.forName("org.postgresql.Driver");
@@ -48,66 +52,54 @@ public class LiquibaseUtilTest {
     String createSchemaTemplate = "CREATE SCHEMA %s AUTHORIZATION %s";
     String createSchema = String.format(createSchemaTemplate, schemaName, schemaName);
     postgresClient.select("SELECT 1")
-    .compose(x -> postgresClient.execute(elevateTenantUserQuery))
-    .compose(x -> postgresClient.execute(createSchema))
-    .onComplete(context.asyncAssertSuccess());
+      .compose(x -> postgresClient.execute(elevateTenantUserQuery))
+      .compose(x -> postgresClient.execute(createSchema))
+      .onComplete(context.succeedingThenComplete());
   }
 
   @Test
-  public void testInitializeSchemaForModule(final TestContext context) {
+  void testInitializeSchemaForModule(final VertxTestContext context) {
     LiquibaseUtil.initializeSchemaForModule(vertx, MODULE_CONFIGURATION_SCHEMA);
     String query = "SELECT count(*) as count FROM information_schema.schemata WHERE schema_name = $1";
     PostgresClient.getInstance(vertx).selectSingle(query, Tuple.of(MODULE_CONFIGURATION_SCHEMA))
-    .onComplete(context.asyncAssertSuccess(row -> {
-      assertThat(row.getInteger("count"), is(1));
-    }));
-  }
-
-  @Test(expected = Exception.class)
-  public void exceptionInInitializeSchemaForModule(final TestContext context) {
-    LiquibaseUtil.initializeSchemaForModule(vertx, "invalid ' ");
+      .onComplete(context.succeeding(row -> context.verify(() -> {
+        assertThat(row.getInteger("count"), is(1));
+        context.completeNow();
+      })));
   }
 
   @Test
-  public void testInitializeSchemaForTenant(final TestContext context) {
+  void exceptionInInitializeSchemaForModule() {
+    assertThrows(Exception.class, () -> LiquibaseUtil.initializeSchemaForModule(vertx, "invalid ' "));
+  }
+
+  @Test
+  void testInitializeSchemaForTenant(final VertxTestContext context) {
     LiquibaseUtil.initializeSchemaForTenant(vertx, TENANT_ID);
 
     PostgresClient postgresClient = PostgresClient.getInstance(vertx);
-
     String schemaName = PostgresClient.convertToPsqlStandard(TENANT_ID);
 
     // check if all tenant schemata were created
-    String tablesQuery = "SELECT table_name FROM information_schema.tables WHERE table_schema = $1";
-    String columnsQuery = "SELECT column_name FROM information_schema.columns WHERE table_schema = $1 and table_name = $2";
+    postgresClient.execute(TABLES_QUERY, Tuple.of(schemaName))
+      .onComplete(context.succeeding(tableRes -> {
+        List<String> actualTables = new ArrayList<>();
+        tableRes.forEach(row -> actualTables.add(row.getString("table_name")));
+        context.verify(() -> assertThat(actualTables, containsInAnyOrder(getExpectedTables().toArray())));
 
-    postgresClient.execute(tablesQuery, Tuple.of(schemaName))
-    .onComplete(context.asyncAssertSuccess(tableRes -> {
-      List<String> actualTables = new ArrayList<>();
-      tableRes.forEach(row -> actualTables.add(row.getString("table_name")));
-      List<String> expectedTables = getExpectedTables();
-      assertThat(actualTables, containsInAnyOrder(expectedTables.toArray()));
-
-      actualTables.forEach(tableName -> {
-
-        // check if all schema columns were as expected
-        postgresClient.execute(columnsQuery, Tuple.of(schemaName, tableName))
-        .onComplete(context.asyncAssertSuccess(columnRes -> {
-          List<String> actualColumns = new ArrayList<>();
-          columnRes.forEach(row -> actualColumns.add(row.getString("column_name")));
-          List<String> expectedColumns = getExpectedColumns(tableName);
-          assertThat(actualColumns, containsInAnyOrder(expectedColumns.toArray()));
-        }));
-      });
-    }));
+        Checkpoint checkpoint = context.checkpoint(actualTables.size());
+        actualTables.forEach(tableName ->
+          verifyColumns(postgresClient, schemaName, tableName, checkpoint, context));
+      }));
   }
 
-  @Test(expected = Exception.class)
-  public void exceptionInInitializeSchemaForTenant(final TestContext context) {
-    LiquibaseUtil.initializeSchemaForTenant(vertx, "invalid ' ");
+  @Test
+  void exceptionInInitializeSchemaForTenant() {
+    assertThrows(Exception.class, () -> LiquibaseUtil.initializeSchemaForTenant(vertx, "invalid ' "));
   }
 
-  @AfterClass
-  public static void tearDownClass(final TestContext context) {
+  @AfterAll
+  static void tearDownClass(final VertxTestContext context) {
     PostgresClient postgresClient = PostgresClient.getInstance(vertx);
 
     String schemaName = PostgresClient.convertToPsqlStandard(TENANT_ID);
@@ -116,12 +108,28 @@ public class LiquibaseUtilTest {
     String dropUserQueryTemplate = "DROP ROLE IF EXISTS %s";
     String dropUserQuery = String.format(dropUserQueryTemplate, schemaName);
     postgresClient.execute(dropSchemaQuery)
-    .compose(x -> postgresClient.execute(dropUserQuery))
-    .onComplete(context.asyncAssertSuccess());
+      .compose(x -> postgresClient.execute(dropUserQuery))
+      .onComplete(context.succeedingThenComplete());
+  }
+
+  // check if all schema columns were as expected
+  private void verifyColumns(PostgresClient postgresClient, String schemaName, String tableName,
+                             Checkpoint checkpoint, VertxTestContext context) {
+    postgresClient.execute(COLUMNS_QUERY, Tuple.of(schemaName, tableName))
+      .onComplete(context.succeeding(columnRes -> {
+        List<String> actualColumns = new ArrayList<>();
+        columnRes.forEach(row -> actualColumns.add(row.getString("column_name")));
+        List<String> expectedColumns = getExpectedColumns(tableName);
+        context.verify(() -> {
+          assertThat(actualColumns, containsInAnyOrder(expectedColumns.toArray()));
+          checkpoint.flag();
+        });
+      }));
   }
 
   private List<String> getExpectedTables() {
-    return Arrays.asList("databasechangeloglock", "databasechangelog", "audit_message", "audit_message_payload", "user");
+    return Arrays.asList("databasechangeloglock", "databasechangelog", "audit_message", "audit_message_payload",
+      "user");
   }
 
   private List<String> getExpectedColumns(String tableName) {
@@ -136,5 +144,4 @@ public class LiquibaseUtilTest {
       default -> new ArrayList<>();
     };
   }
-
 }
