@@ -1,5 +1,9 @@
 package org.folio.rest.tools.utils;
 
+/**
+ * This class is required for tests to get the module name and version.
+ * The logic of getting these values is in {@link org.folio.rest.persist.PostgresClient}.
+ */
 public class ModuleName {
 
   private static final String MODULE_NAME = "folio_liquibase_util";
@@ -12,5 +16,4 @@ public class ModuleName {
   public static String getModuleVersion() {
     return MODULE_VERSION;
   }
-
 }

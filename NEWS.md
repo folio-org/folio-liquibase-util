@@ -1,3 +1,34 @@
+## 1.12.0 2026-07-23
+### Breaking changes
+* Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
+
+### Features
+* Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
+
+### Bug fixes
+* Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
+
+### Tech Dept
+* Migrate tests from JUnit 4 to JUnit 6 and replace `vertx-unit` with `vertx-junit5`
+* Add `maven-checkstyle-plugin` with `folio-java-checkstyle` rules and fix resulting violations
+
+### Dependencies
+* Bump `vertx-core` from `5.0.5` to `5.0.10`
+* Bump `liquibase-core` from `5.0.1` to `5.0.3`
+* Bump `postgresql` from `42.7.8` to `42.7.13`
+* Bump `junit` from `4.13.2` to `junit-jupiter 6.1.2`
+* Bump `maven-enforcer-plugin` from `3.6.2` to `3.6.3`
+* Bump `maven-compiler-plugin` from `3.14.1` to `3.15.0`
+* Bump `maven-surefire-plugin` from `3.5.4` to `3.5.6`
+* Bump `maven-source-plugin` from `3.3.1` to `3.4.0`
+* Bump `maven-release-plugin` from `3.2.0` to `3.3.1`
+* Add `maven-checkstyle-plugin 3.6.0`
+* Add `folio-java-checkstyle 1.2.0`
+* Add `checkstyle 13.7.0`
+* Add `junit-platform-launcher 6.1.2`
+* Remove `maven-shade-plugin`
+* Remove `vertx-unit`
+
 ## 1.11.0 2026-04-10
 * [LIQUTIL-49](https://folio-org.atlassian.net/browse/LIQUTIL-49) UUpgrade to Vert.x 5.0
 
