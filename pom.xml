@@ -24,7 +24,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <raml-module-builder.version>36.0.0</raml-module-builder.version>
-    <vertx.version>5.0.12</vertx.version>
+    <vertx.version>5.1.5</vertx.version>
     <liquibase.version>5.0.3</liquibase.version>
     <postgresql.version>42.7.13</postgresql.version>
     <commons-lang3.version>3.20.0</commons-lang3.version>
@@ -41,7 +41,7 @@
     <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
     <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
     <folio-java-checkstyle.version>1.2.0</folio-java-checkstyle.version>
-    <checkstyle.version>13.7.0</checkstyle.version>
+    <checkstyle.version>13.9.0</checkstyle.version>
   </properties>
 
   <dependencyManagement>
