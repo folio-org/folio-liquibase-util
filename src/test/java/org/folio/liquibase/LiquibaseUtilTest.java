@@ -5,8 +5,8 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import io.vertx.core.Future;
 import io.vertx.core.Vertx;
-import io.vertx.junit5.Checkpoint;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 import io.vertx.sqlclient.Tuple;
@@ -82,15 +82,17 @@ class LiquibaseUtilTest {
 
     // check if all tenant schemata were created
     postgresClient.execute(TABLES_QUERY, Tuple.of(schemaName))
-      .onComplete(context.succeeding(tableRes -> {
+      .compose(tableRes -> {
         List<String> actualTables = new ArrayList<>();
         tableRes.forEach(row -> actualTables.add(row.getString("table_name")));
         context.verify(() -> assertThat(actualTables, containsInAnyOrder(getExpectedTables().toArray())));
 
-        Checkpoint checkpoint = context.checkpoint(actualTables.size());
-        actualTables.forEach(tableName ->
-          verifyColumns(postgresClient, schemaName, tableName, checkpoint, context));
-      }));
+        List<Future<Void>> columnChecks = actualTables.stream()
+          .map(tableName -> verifyColumns(postgresClient, schemaName, tableName, context))
+          .toList();
+        return Future.all(columnChecks);
+      })
+      .onComplete(context.succeedingThenComplete());
   }
 
   @Test
@@ -113,18 +115,16 @@ class LiquibaseUtilTest {
   }
 
   // check if all schema columns were as expected
-  private void verifyColumns(PostgresClient postgresClient, String schemaName, String tableName,
-                             Checkpoint checkpoint, VertxTestContext context) {
-    postgresClient.execute(COLUMNS_QUERY, Tuple.of(schemaName, tableName))
-      .onComplete(context.succeeding(columnRes -> {
+  private Future<Void> verifyColumns(PostgresClient postgresClient, String schemaName, String tableName,
+                                     VertxTestContext context) {
+    return postgresClient.execute(COLUMNS_QUERY, Tuple.of(schemaName, tableName))
+      .map(columnRes -> {
         List<String> actualColumns = new ArrayList<>();
         columnRes.forEach(row -> actualColumns.add(row.getString("column_name")));
         List<String> expectedColumns = getExpectedColumns(tableName);
-        context.verify(() -> {
-          assertThat(actualColumns, containsInAnyOrder(expectedColumns.toArray()));
-          checkpoint.flag();
-        });
-      }));
+        context.verify(() -> assertThat(actualColumns, containsInAnyOrder(expectedColumns.toArray())));
+        return null;
+      });
   }
 
   private List<String> getExpectedTables() {
