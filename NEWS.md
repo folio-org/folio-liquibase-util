@@ -6,7 +6,7 @@
 * Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
 
 ### Bug fixes
-* Description ([ISSUE](https://folio-org.atlassian.net/browse/ISSUE))
+* Run tenant changelogs as the tenant role when RMB uses the shared DB pool (`DB_MAXSHAREDPOOLSIZE`), so created objects are owned by it ([LIQUTIL-52](https://folio-org.atlassian.net/browse/LIQUTIL-52))
 
 ### Tech Dept
 * Migrate tests from JUnit 4 to JUnit 6 and replace `vertx-unit` with `vertx-junit5`
