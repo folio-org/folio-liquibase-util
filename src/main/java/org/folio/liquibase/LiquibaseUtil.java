@@ -60,6 +60,11 @@ public final class LiquibaseUtil {
     String schemaName = PostgresClient.convertToPsqlStandard(tenant);
     LOGGER.info("Initializing schema {} for tenant {}", schemaName, tenant);
     try (Connection connection = getConnection(vertx, tenant)) {
+      if (PostgresClient.isSharedPool()) {
+        // the shared pool connects as the admin user; act as the tenant role so that
+        // created objects are owned by it, the same way RMB does for its own queries
+        setRole(connection, schemaName);
+      }
       runScripts(schemaName, connection, CHANGELOG_TENANT_PATH);
       LOGGER.info("Schema is initialized for tenant {}", tenant);
     } catch (SQLException | LiquibaseException e) {
@@ -84,6 +89,24 @@ public final class LiquibaseUtil {
     try (Liquibase liquibase = new Liquibase(changelogPath, new ClassLoaderResourceAccessor(), database)) {
       liquibase.update(new Contexts());
     }
+  }
+
+  /**
+   * Switches the current session to the given role.
+   *
+   * @param connection connection to the underlying database
+   * @param role       role name
+   * @throws SQLException if query execution error occurs
+   */
+  @SuppressWarnings("java:S2077") // the role name is quoted as an identifier
+  private static void setRole(Connection connection, String role) throws SQLException {
+    try (Statement statement = connection.createStatement()) {
+      statement.execute("SET ROLE " + quoteIdentifier(role));
+    }
+  }
+
+  private static String quoteIdentifier(String identifier) {
+    return '"' + identifier.replace("\"", "\"\"") + '"';
   }
 
   /**

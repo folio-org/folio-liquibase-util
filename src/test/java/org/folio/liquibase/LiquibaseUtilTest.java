@@ -2,6 +2,8 @@ package org.folio.liquibase;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -29,10 +31,13 @@ class LiquibaseUtilTest {
   private static final String MODULE_CONFIGURATION_SCHEMA = "test_config";
 
   private static final String TENANT_ID = "diku";
+  private static final String SHARED_POOL_TENANT_ID = "shared";
   private static final String TABLES_QUERY =
     "SELECT table_name FROM information_schema.tables WHERE table_schema = $1";
   private static final String COLUMNS_QUERY =
     "SELECT column_name FROM information_schema.columns WHERE table_schema = $1 and table_name = $2";
+  private static final String TABLE_OWNERS_QUERY =
+    "SELECT tableowner FROM pg_tables WHERE schemaname = $1";
   private static Vertx vertx;
 
   @BeforeAll
@@ -45,16 +50,22 @@ class LiquibaseUtilTest {
 
     PostgresClient postgresClient = PostgresClient.getInstance(vertx);
 
-    // create a user for tenant
-    String schemaName = PostgresClient.convertToPsqlStandard(TENANT_ID);
+    postgresClient.select("SELECT 1")
+      .compose(x -> createTenantRoleAndSchema(postgresClient, TENANT_ID))
+      .compose(x -> createTenantRoleAndSchema(postgresClient, SHARED_POOL_TENANT_ID))
+      .onComplete(context.succeedingThenComplete());
+  }
+
+  // create a user and a schema for tenant
+  private static Future<Void> createTenantRoleAndSchema(PostgresClient postgresClient, String tenantId) {
+    String schemaName = PostgresClient.convertToPsqlStandard(tenantId);
     String elevateTenantUserQueryTemplate = "CREATE ROLE %s WITH PASSWORD '%s' LOGIN";
-    String elevateTenantUserQuery = String.format(elevateTenantUserQueryTemplate, schemaName, TENANT_ID);
+    String elevateTenantUserQuery = String.format(elevateTenantUserQueryTemplate, schemaName, tenantId);
     String createSchemaTemplate = "CREATE SCHEMA %s AUTHORIZATION %s";
     String createSchema = String.format(createSchemaTemplate, schemaName, schemaName);
-    postgresClient.select("SELECT 1")
-      .compose(x -> postgresClient.execute(elevateTenantUserQuery))
+    return postgresClient.execute(elevateTenantUserQuery)
       .compose(x -> postgresClient.execute(createSchema))
-      .onComplete(context.succeedingThenComplete());
+      .mapEmpty();
   }
 
   @Test
@@ -96,6 +107,27 @@ class LiquibaseUtilTest {
   }
 
   @Test
+  void testInitializeSchemaForTenantWithSharedPool(final VertxTestContext context) {
+    // with the shared pool the tenant connection uses the admin user instead of the tenant role
+    PostgresClient.setSharedPgPool(true);
+    try {
+      LiquibaseUtil.initializeSchemaForTenant(vertx, SHARED_POOL_TENANT_ID);
+    } finally {
+      PostgresClient.setSharedPgPool(false);
+    }
+
+    String schemaName = PostgresClient.convertToPsqlStandard(SHARED_POOL_TENANT_ID);
+    PostgresClient.getInstance(vertx).execute(TABLE_OWNERS_QUERY, Tuple.of(schemaName))
+      .onComplete(context.succeeding(rows -> context.verify(() -> {
+        List<String> owners = new ArrayList<>();
+        rows.forEach(row -> owners.add(row.getString("tableowner")));
+        assertThat(owners, hasSize(getExpectedTables().size()));
+        assertThat(owners, everyItem(is(schemaName)));
+        context.completeNow();
+      })));
+  }
+
+  @Test
   void exceptionInInitializeSchemaForTenant() {
     assertThrows(Exception.class, () -> LiquibaseUtil.initializeSchemaForTenant(vertx, "invalid ' "));
   }
@@ -104,14 +136,20 @@ class LiquibaseUtilTest {
   static void tearDownClass(final VertxTestContext context) {
     PostgresClient postgresClient = PostgresClient.getInstance(vertx);
 
-    String schemaName = PostgresClient.convertToPsqlStandard(TENANT_ID);
+    dropTenantRoleAndSchema(postgresClient, TENANT_ID)
+      .compose(x -> dropTenantRoleAndSchema(postgresClient, SHARED_POOL_TENANT_ID))
+      .onComplete(context.succeedingThenComplete());
+  }
+
+  private static Future<Void> dropTenantRoleAndSchema(PostgresClient postgresClient, String tenantId) {
+    String schemaName = PostgresClient.convertToPsqlStandard(tenantId);
     String dropSchemaQueryTemplate = "DROP SCHEMA IF EXISTS %s CASCADE";
     String dropSchemaQuery = String.format(dropSchemaQueryTemplate, schemaName);
     String dropUserQueryTemplate = "DROP ROLE IF EXISTS %s";
     String dropUserQuery = String.format(dropUserQueryTemplate, schemaName);
-    postgresClient.execute(dropSchemaQuery)
+    return postgresClient.execute(dropSchemaQuery)
       .compose(x -> postgresClient.execute(dropUserQuery))
-      .onComplete(context.succeedingThenComplete());
+      .mapEmpty();
   }
 
   // check if all schema columns were as expected
