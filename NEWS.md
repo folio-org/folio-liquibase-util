@@ -1,5 +1,8 @@
+## 1.11.1 2026-11-17
+* [LIQUTIL-53](https://folio-org.atlassian.net/browse/LIQUTIL-53) Downgrade liquibase to 4.33.0 for licensing issues
+
 ## 1.11.0 2026-04-10
-* [LIQUTIL-49](https://folio-org.atlassian.net/browse/LIQUTIL-49) UUpgrade to Vert.x 5.0
+* [LIQUTIL-49](https://folio-org.atlassian.net/browse/LIQUTIL-49) Upgrade to Vert.x 5.0
 
 ## 1.10.0 2025-03-07
 * [LIQUTIL-45](https://folio-org.atlassian.net/browse/LIQUTIL-45) Update to liquibase-util Java 21

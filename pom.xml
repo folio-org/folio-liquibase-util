@@ -21,7 +21,12 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <vertx.version>5.0.5</vertx.version>
-    <liquibase.version>5.0.1</liquibase.version>
+    <!--
+      Latest liquibase versions have a different license that is not open source software (OSS).
+      Keep at latest Apache-2.0 licensed version to comply with FOLIO's licensing requirements:
+      https://github.com/folio-org/tech-council/blob/master/MODULE_ACCEPTANCE_CRITERIA.MD
+    -->
+    <liquibase.version>4.33.0</liquibase.version>
     <raml-module-builder.version>36.0.0</raml-module-builder.version>
     <junit.version>4.13.2</junit.version>
     <postgresql.version>42.7.8</postgresql.version>
