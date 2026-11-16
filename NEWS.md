@@ -14,7 +14,6 @@
 
 ### Dependencies
 * Bump `vertx-core` from `5.0.5` to `5.0.10`
-* Bump `liquibase-core` from `5.0.1` to `5.0.3`
 * Bump `postgresql` from `42.7.8` to `42.7.13`
 * Bump `junit` from `4.13.2` to `junit-jupiter 6.1.2`
 * Bump `maven-enforcer-plugin` from `3.6.2` to `3.6.3`
@@ -29,8 +28,11 @@
 * Remove `maven-shade-plugin`
 * Remove `vertx-unit`
 
+## 1.11.1 2026-11-11
+* [LIQUTIL-53](https://folio-org.atlassian.net/browse/LIQUTIL-53) Downgrade liquibase to 4.33.0 for licensing issues
+
 ## 1.11.0 2026-04-10
-* [LIQUTIL-49](https://folio-org.atlassian.net/browse/LIQUTIL-49) UUpgrade to Vert.x 5.0
+* [LIQUTIL-49](https://folio-org.atlassian.net/browse/LIQUTIL-49) Upgrade to Vert.x 5.0
 
 ## 1.10.0 2025-03-07
 * [LIQUTIL-45](https://folio-org.atlassian.net/browse/LIQUTIL-45) Update to liquibase-util Java 21
